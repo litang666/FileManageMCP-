@@ -360,31 +360,38 @@ if __name__ == "__main__":
     import sys
     import io
 
-    # Windows 인코딩 문제 해결
+    # Windows 인코딩 문제 해결 - stderr만 래핑 (stdout은 MCP 프로토콜용)
     if sys.platform == "win32":
-        sys.stdout = io.TextIOWrapper(
-            sys.stdout.buffer, encoding="utf-8", errors="replace"
-        )
         sys.stderr = io.TextIOWrapper(
             sys.stderr.buffer, encoding="utf-8", errors="replace"
         )
 
-    print("[START] File Organization MCP Server")
-    print("        Name: file-organization-agent")
-    print("        Version: 1.0.0")
-    print("")
-    print("[TOOLS] Available:")
-    print("   [Config] tool_set_dry_run, tool_get_status, tool_configure_workspace")
+    # MCP는 stdout을 프로토콜 통신에 사용하므로 로그는 stderr로 출력
+    print("[START] File Organization MCP Server", file=sys.stderr)
+    print("        Name: file-organization-agent", file=sys.stderr)
+    print("        Version: 1.0.0", file=sys.stderr)
+    print("", file=sys.stderr)
+    print("[TOOLS] Available:", file=sys.stderr)
     print(
-        "   [Read]   tool_list_directory, tool_read_file_snippet, tool_get_image_metadata"
+        "   [Config] tool_set_dry_run, tool_get_status, tool_configure_workspace",
+        file=sys.stderr,
     )
-    print("   [Read]   tool_analyze_directory_structure")
-    print("   [Action] tool_move_file, tool_rename_file, tool_create_folder")
-    print("   [Action] tool_batch_rename_with_date")
-    print("")
-    print("[NOTE] Dry Run mode is ENABLED by default.")
-    print("       Call tool_set_dry_run(false) for actual file changes.")
-    print("")
+    print(
+        "   [Read]   tool_list_directory, tool_read_file_snippet, tool_get_image_metadata",
+        file=sys.stderr,
+    )
+    print("   [Read]   tool_analyze_directory_structure", file=sys.stderr)
+    print(
+        "   [Action] tool_move_file, tool_rename_file, tool_create_folder",
+        file=sys.stderr,
+    )
+    print("   [Action] tool_batch_rename_with_date", file=sys.stderr)
+    print("", file=sys.stderr)
+    print("[NOTE] Dry Run mode is ENABLED by default.", file=sys.stderr)
+    print(
+        "       Call tool_set_dry_run(false) for actual file changes.", file=sys.stderr
+    )
+    print("", file=sys.stderr)
 
     # stdio 전송 방식으로 서버 실행
     mcp.run()
