@@ -214,7 +214,7 @@ AI:
 ### MCP 연결 실패
 - Python 경로가 올바른지 확인
 - `uv` 또는 `pip`으로 의존성 설치 확인
-- `mcp` 패키지 버전 확인: `pip show mcp`
+- `mcp` 패키지 버전 확인: `pip show fastmcp`
 
 ## 📄 라이선스
 
