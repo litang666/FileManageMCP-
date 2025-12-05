@@ -1,222 +1,307 @@
-# 📂 File Organization MCP Server
+# 📂 文件组织 MCP 服务器
 
-Windows용 로컬 MCP 서버로, LLM이 파일 시스템을 정리할 수 있도록 도구를 제공합니다.
+一款适用于 Windows 的本地 MCP 服务器，为 LLM 提供文件系统组织工具。
 
-## ✨ 주요 기능
+## ✨ 主要功能
 
-- **디렉토리 분석**: 파일/폴더 목록 조회, 날짜 정보 추출
-- **파일 내용 확인**: 텍스트/코드 파일 스니펫 읽기 (cp949/euc-kr 인코딩 지원)
-- **이미지 메타데이터**: EXIF 정보에서 촬영 날짜 추출
-- **파일 작업**: 이동, 이름 변경, 폴더 생성
-- **일괄 처리**: 날짜 접두사 일괄 추가
-- **안전 기능**: Dry Run 모드, 샌드박스 제한, 시스템 폴더 보호
+- **目录分析**：列出文件/文件夹，提取日期信息
 
-## 📋 파일 정리 규칙
+- **检查文件内容**：读取文本/代码文件片段（支持 cp949/euc-kr 编码）
 
-### 2가지 절대 규칙
-1. **5단계 규칙**: 디렉토리 깊이는 최대 5단계까지
-2. **번호 체계**: 폴더는 `00~99` 접두사 사용 (예: `01_Project`), `99`는 Archive용
+- **图像元数据**：从 EXIF 信息中提取拍摄日期
 
-### 명명 규칙
-- **폴더**: `NN_이름` 형식 (예: `01_Business`, `02_Project`)
-- **파일**: `YYMMDD_파일명` 형식 (예: `251202_회의록.docx`)
-- **버전**: `_v1.0` 형식 (Final, 최종 금지!)
+- **文件操作**：移动、重命名、创建文件夹
 
-## 🚀 설치 및 실행
+- **批量处理**：批量添加日期前缀
 
-### 요구 사항
+- **安全功能**：模拟运行模式、沙盒限制、系统文件夹保护
+
+## 📋 文件组织规则
+
+### 两条绝对规则
+
+1. **五级规则**：目录深度限制为五级。
+
+2. **编号系统**：文件夹使用 `00~99` 前缀（例如，`01_Project`），`99` 用于归档文件。
+
+### 命名规则
+
+- **文件夹**：`NN_名称` 格式（例如，`01_Business`、`02_Project`）
+
+- **文件**：`YYMMDD_文件名` 格式（例如，`251202_Minutes.docx`）
+
+- **版本**：`_v1.0` 格式（最终版，禁止使用！）
+
+## 🚀 安装和运行
+
+### 系统要求
+
 - Windows 10/11
-- Python 3.13+
-- `uv` (권장) 또는 `pip`
 
-### 방법 1: uv 사용 (권장)
+- Python 3.13+
+
+- `uv`（推荐）或 `pip`
+
+### 方法 1：使用 uv（推荐）
 
 ```bash
-# 프로젝트 디렉토리로 이동
+# 导航到项目目录
+
 cd C:\{your_path}\FileManageMCP
 
-# uv로 의존성 설치 및 실행
+# 使用 uv 安装并运行依赖项
+
 uv run python server.py
+
 ```
 
-### 방법 2: pip 사용
+### 方法 2：使用 pip
 
 ```bash
-# 가상환경 생성 (선택사항)
+
+# 创建虚拟环境（可选）
+
 python -m venv venv
+
 venv\Scripts\activate
 
-# 의존성 설치
+# 安装依赖项
+
 pip install -r requirements.txt
 
-# 서버 실행
+# 运行服务器
+
 python server.py
+
 ```
 
-## ⚙️ Cursor/Claude Desktop 설정
+## ⚙️ 光标/Claude 桌面设置
 
-### Cursor 설정 (`settings.json`)
+### 光标设置 (`settings.json`)
 
 ```json
 {
-  "mcpServers": {
-    "file-organization-agent": {
-      "command": "uv",
-      "args": ["run", "--directory", "{your_path}\\FileManageMCP", "python", "server.py"]
-    } 
-  }
+
+"mcpServers": {
+
+"file-organization-agent": {
+
+"command": "uv",
+
+"args": ["run", "--directory", "{your_path}\\FileManageMCP", "python", "server.py"]
+
+}
+}
 }
 
 ```
 
-### Claude Desktop 설정 (`claude_desktop_config.json`)
+### Claude 桌面设置 (`claude_desktop_config.json`)
 
 Windows: `%APPDATA%\Claude\claude_desktop_config.json`
 
 ```json
+
 {
-  "mcpServers": {
-    "file-organization-agent": {
-      "command": "uv",
-      "args": ["run", "python", "server.py"],
-      "cwd": "C:\\{your_path}\\FileManageMCP"
-    }
-  }
+
+"mcpServers": {
+
+"file-organization-agent": {
+
+"command": "uv",
+
+"args": ["run", "python", "server.py"],
+
+"cwd": "C:\\{your_path}\\FileManageMCP"
+}
+}
 }
 ```
 
-또는 Python 직접 실행:
+或者直接运行 Python：
 
 ```json
 {
-  "mcpServers": {
-    "file-organization-agent": {
-      "command": "python",
-      "args": ["C:\\{your_path}\\FileManageMCP\\server.py"],
-      "env": {
-        "MCP_FILE_AGENT_ROOT": "D:\\MyDocuments"
-      }
-    }
-  }
+"mcpServers": {
+"file-organization-agent": {
+"command": "python",
+"args": ["C:\\{your_path}\\FileManageMCP\\server.py"],
+
+"env": {
+"MCP_FILE_AGENT_ROOT": "D:\\MyDocuments"
+}
+}
+}
 }
 ```
 
-## 🛠️ 사용 가능한 도구
+## 🛠️ 可用工具
 
-### 설정 도구
-| 도구 | 설명 |
+### 配置工具
+
+| 工具 | 描述 |
+
 |------|------|
-| `tool_set_dry_run` | Dry Run 모드 설정 (기본: 활성화) |
-| `tool_get_status` | 현재 설정 상태 확인 |
-| `tool_configure_workspace` | 작업 영역(샌드박스) 설정 |
 
-### 분석 도구 (Read-Only)
-| 도구 | 설명 |
+| `tool_set_dry_run` | 设置试运行模式（默认：启用） |
+
+| `tool_get_status` | 检查当前配置状态 | | `tool_configure_workspace` | 设置工作区（沙盒） |
+
+### 分析工具（只读）
+
+| 工具 | 描述 |
+
 |------|------|
-| `tool_list_directory` | 디렉토리 내용 조회 (날짜 정보 포함) |
-| `tool_read_file_snippet` | 파일 내용 미리보기 |
-| `tool_get_image_metadata` | 이미지 EXIF 정보 추출 |
-| `tool_analyze_directory_structure` | 디렉토리 구조 분석 및 문제점 파악 |
 
-### 액션 도구 (Dry Run 지원)
-| 도구 | 설명 |
+| `tool_list_directory` | 列出目录内容（包括日期信息） |
+
+| `tool_read_file_snippet` | 预览文件内容 |
+
+| `tool_get_image_metadata` | 提取图像 EXIF 信息 |
+
+| `tool_analyze_directory_structure` | 分析目录结构并识别问题 |
+
+### 操作工具（支持试运行）
+
+| 工具 | 描述 |
+
 |------|------|
-| `tool_move_file` | 파일 이동 |
-| `tool_rename_file` | 파일/폴더 이름 변경 |
-| `tool_create_folder` | 새 폴더 생성 |
-| `tool_batch_rename_with_date` | 날짜 접두사 일괄 추가 |
 
-## 🔒 안전 기능
+| `tool_move_file` | 移动文件 |
 
-### Dry Run 모드 (기본 활성화)
-- 모든 파일 수정 작업은 기본적으로 시뮬레이션만 수행
-- 실제 변경 전 예상 결과 확인 가능
-- `tool_set_dry_run(false)` 호출로 실제 모드 전환
+| `tool_rename_file` | 重命名文件/文件夹 |
 
-### 샌드박스 제한
-- `tool_configure_workspace`로 작업 영역 설정
-- 설정된 영역 외부 접근 차단
+| `tool_create_folder` | 创建新文件夹 |
 
-### 시스템 폴더 보호
-접근 차단되는 경로:
+| `tool_batch_rename_with_date` | 批量添加日期前缀 |
+
+## 🔒 安全特性
+
+### 模拟运行模式（默认启用）
+
+- 默认情况下，所有文件修改都会进行模拟。
+
+- 您可以在实际更改之前检查预期结果。
+
+- 调用 `tool_set_dry_run(false)` 切换到模拟运行模式。
+
+### 沙盒限制
+
+- 使用 `tool_configure_workspace` 设置工作区
+
+- 阻止访问设置区域之外的内容。
+
+### 系统文件夹保护
+
+以下路径将被阻止访问：
+
 - `C:\Windows`
+
 - `C:\Program Files`
+
 - `C:\Program Files (x86)`
-- `.git`, `node_modules` 등
 
-## 📖 사용 예시
+- `.git`、`node_modules` 等。
 
-### 1. 기본 워크플로우
+## 📖 使用示例
 
-```
-User: D:\Downloads 폴더를 정리해줘
-
-AI: 
-1. 먼저 작업 영역을 설정합니다.
-   → tool_configure_workspace("D:\\Downloads")
-
-2. 현재 상태를 확인합니다.
-   → tool_get_status()  # Dry Run 활성화 확인
-
-3. 디렉토리 구조를 분석합니다.
-   → tool_analyze_directory_structure("D:\\Downloads")
-
-4. 파일 목록을 확인합니다.
-   → tool_list_directory("D:\\Downloads")
-
-5. 정리 계획을 세우고 Dry Run으로 시뮬레이션합니다.
-   → tool_create_folder("D:\\Downloads", "01_Documents")
-   → tool_move_file("D:\\Downloads\\report.docx", "D:\\Downloads\\01_Documents")
-
-6. 결과 확인 후 실제 실행합니다.
-   → tool_set_dry_run(false)
-   → (위 작업 재실행)
-```
-
-### 2. 날짜 접두사 일괄 추가
+### 1. 基本工作流程
 
 ```
-User: 모든 파일에 날짜 접두사를 붙여줘
+用户：清理 D:\Downloads 文件夹。
 
-AI:
-1. 대상 확인
-   → tool_list_directory("D:\\Downloads")
+AI：
 
-2. Dry Run 시뮬레이션
-   → tool_batch_rename_with_date("D:\\Downloads", use_modified=true)
+1. 首先，设置工作区。
 
-3. 확인 후 실제 실행
-   → tool_set_dry_run(false)
-   → tool_batch_rename_with_date("D:\\Downloads", use_modified=true)
+→ tool_configure_workspace("D:\\Downloads")
+
+2. 检查当前状态。→ tool_get_status() # 验证是否已启用 Dry Run
+
+3. 分析目录结构。
+
+→ tool_analyze_directory_structure("D:\\Downloads")
+
+4. 检查文件列表。
+
+→ tool_list_directory("D:\\Downloads")
+
+5. 创建清理计划并使用 Dry Run 进行模拟。
+
+→ tool_create_folder("D:\\Downloads", "01_Documents")
+
+→ tool_move_file("D:\\Downloads\\report.docx", "D:\\Downloads\\01_Documents")
+
+6. 检查结果并运行程序。 → tool_set_dry_run(false)
+
+→ （重新运行上述任务）
+
 ```
 
-## 📁 프로젝트 구조
+### 2. 批量添加日期前缀
 
 ```
+
+用户：为所有文件添加日期前缀
+
+AI：
+
+1. 检查目标目录
+
+→ tool_list_directory("D:\\Downloads")
+
+2. 模拟试运行
+
+→ tool_batch_rename_with_date("D:\\Downloads", use_modified=true)
+
+3. 检查并运行程序
+
+→ tool_set_dry_run(false)
+
+→ tool_batch_rename_with_date("D:\\Downloads", use_modified=true)
+
+```
+
+## 📁 项目结构
+
+```
+
 03_FileManageMCP/
-├── server.py          # MCP 서버 진입점 (FastMCP)
-├── tools.py           # MCP 도구 함수 구현
-├── utils.py           # 유틸리티 (경로 검증, 인코딩 처리)
-├── requirements.txt   # Python 의존성
-└── README.md          # 이 문서
+
+├── server.py # MCP 服务器入口点 (FastMCP)
+
+├── tools.py # MCP 工具函数实现
+
+├── utils.py # 实用程序 (路径)验证、编码处理）
+
+├── requirements.txt # Python 依赖项
+
+└── README.md # 本文档
+
 ```
 
-## 🐛 문제 해결
+## 🐛 故障排除
 
-### "권한 오류" 발생
-- 관리자 권한이 필요한 폴더인지 확인
-- 다른 프로그램에서 파일을 사용 중인지 확인
+### 出现“权限错误”
 
-### 인코딩 오류
-- 한글 파일명/내용은 자동으로 cp949/euc-kr 처리됨
-- 바이너리 파일은 내용 읽기 불가 (메타데이터만 표시)
+- 检查文件夹是否需要管理员权限
 
-### MCP 연결 실패
-- Python 경로가 올바른지 확인
-- `uv` 또는 `pip`으로 의존성 설치 확인
-- `mcp` 패키지 버전 확인: `pip show fastmcp`
+- 检查文件是否被其他程序使用
 
-## 📄 라이선스
+### 编码错误
 
-MIT License
+- 韩语文件名/内容会自动转换为 cp949/euc-kr 编码
 
+- 二进制文件无法读取（仅显示元数据）
+
+### MCP 连接失败
+
+- 检查 Python 路径是否正确
+
+- 使用 `uv` 或 `pip` 验证依赖项安装
+
+- 检查 `mcp` 包版本：`pip show fastmcp`
+
+## 📄 许可证
+
+MIT 许可证
